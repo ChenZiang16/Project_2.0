@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+   <mapper namespace="com.dao.UserDao"> 
+   
+<!--    <resultMap type="com.entry.User" id="userMap"> -->
+<!--      <id column="usr_id" property="usrId"/> -->
+<!--    	 <result column="name" property="name"/> -->
+<!--    	 <result column="gender" property="gender"/> -->
+<!--    	 <result column="nation" property="nation"/> -->
+<!--    	 <result column="address" property="address"/> -->
+<!--    	 <collection property="roles" autoMapping="true" ofType="com.entry.Role"> -->
+<!--    		<id column="role_id" property="roleId"/> -->
+<!--    		<result column="role_name" property="roleName"></result> -->
+<!-- 	   	<collection property="permissions" autoMapping="true" ofType="com.entry.Permission"> -->
+<!-- 	   		<id column="per_id" property="perId"/> -->
+<!-- 	   		<result column="per_name" property="perName"></result> -->
+<!-- 	   	 </collection> -->
+<!--    	 </collection> -->
+<!--    </resultMap> -->
+   
+ 	<select id = "getUser" parameterType = "com.entry.User" resultType="com.entry.User">
+	 	select usr_id as usrId,
+	 		name,
+	 		password,
+	 		gender,
+	 		birthday,
+	 		address,
+	 		nation
+	 		
+	 	from users where 1=1
+	 	<if test="usrId !=null and usrId !=''">
+	 		and usr_id = #{usrId}
+	 	</if>
+	 	<if test="name !=null and name !=''">
+	 		and name = #{name}
+	 	</if>
+ 	</select>
+ 	
+<!--  	<select id = "findPersByName" parameterType = "java.lang.String" resultType="com.entry.User"> -->
+ 	
+<!-- 		select a.usr_id, -->
+<!-- 			   a.Name, -->
+<!-- 			   a.role_id, -->
+<!-- 			   a.per_id, -->
+<!-- 			   p.per_name -->
+<!-- 		from permission p ,( -->
+<!-- 		        select b.usr_id, -->
+<!-- 			           b.Name, -->
+<!-- 			           b.role_id, -->
+<!-- 			           r.per_id -->
+<!-- 		        from role_permission r,( -->
+<!-- 		                select c.usr_id, -->
+<!-- 			                   c.Name, -->
+<!-- 			                   u.role_id -->
+<!-- 		                from user_roles u ,( -->
+<!-- 		                        select usr_id, -->
+<!-- 		                        	   Name  -->
+<!-- 		                        from users  -->
+<!-- 		                        where name = #{name} -->
+<!-- 		               		) c  -->
+<!-- 		                where c.usr_id = u.user_id	 -->
+<!-- 		        	) b  -->
+<!-- 		        where r.role_id = b.role_id -->
+<!-- 			) a -->
+<!-- 		 where p.per_id = a.per_id -->
+	
+<!--  	</select> -->
+
+	</mapper>

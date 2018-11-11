@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+   <mapper namespace="com.dao.MenuDao"> 
+   
+   <resultMap type="com.entry.Role" id="menuMap">
+     <id column="role_id" property="roleId"/>
+   	 <result column="role_name" property="roleName"/>
+   	 <collection property="menus" autoMapping="true" ofType="com.entry.Menu">
+   		<id column="menu_id" property="menuId"/>
+   		<result column="menu_name" property="menuName"></result>
+   		<result column="level" property="level"></result>
+   		<result column="parent_Id" property="parentId"></result>
+   		<result column="link_Url" property="linkUrl"></result>
+   		<result column="is_parent" property="isParent"></result>
+   	 </collection>
+   </resultMap>
+	
+   <insert id="addRoleMenus" parameterType = "com.entry.Role" >
+   
+	   <foreach collection="menus" item="menu" separator=";">
+	  	 insert into menu values
+	  	 	(#{menu.menuId},#{menu.menuName},#{menu.level},#{menu.parentId},
+	  	 	#{menu.linkUrl},#{menu.isValid},sysdate,sysdate)
+        </foreach>   
+   
+   </insert>
+
+ 	<select id = "getMenusByRole" parameterType = "com.entry.Role" resultType="com.entry.Menu">
+ 	
+	 select menu_Id as menuId,
+	 		menu_Name as menuName,
+	 		level,
+	 		parent_Id as parentId,
+	 		link_Url as linkUrl,
+	 		is_Valid as isValid,
+	 		is_parent as isParent
+	 	from menu where is_Valid = 'Y'
+
+	 	<if test="roleId !=null and roleId !=''">
+	 		and menu_id in (
+	 			select menu_id from role_menus
+	 				where role_id = #{roleId}
+	 		)
+	 	</if>
+	 	
+ 	</select>
+ 	
+ 	<select id = "getMenusByRoles" parameterType = "java.util.List" resultMap="menuMap">
+ 	
+		select A.menu_id,
+			   A.menu_Name,
+			   A.level,
+			   A.parent_Id,
+			   A.link_Url,
+			   A.is_parent,
+			   B.role_id,
+			   B.role_name
+		from   (
+				 select 
+			 		menu_Id,
+			 		menu_Name,
+			 		level,
+			 		parent_Id,
+			 		link_Url,
+			 		is_parent
+			 	from menu where is_Valid = 'Y'
+		
+			 	<if test="roleList !=null and roleList.size() !=0">
+			 		and menu_id in (
+			 			select menu_id from role_menus
+			 				where role_id in
+				 	<foreach collection="roleList" item="roles" separator="," open="(" close=")">
+						 #{roles.roleId}
+			        </foreach>   
+			 		)
+			 	</if>
+			   ) A , roles B
+				<if test="roleList !=null and roleList.size() !=0">
+			 				where B.role_id in
+				 	<foreach collection="roleList" item="roles" separator="," open="(" close=")">
+						 #{roles.roleId}
+			        </foreach>   
+			 	</if>
+ 	</select>
+ 	
+	<delete id="deleteMenusByRole" parameterType = "com.entry.Role">
+	
+		delete from menu where menu_id = #{menuId}
+	
+	</delete>
+	 		
+	</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+   <mapper namespace="com.dao.RoleDao"> 
+	
+   <insert id="addRole" parameterType = "com.entry.Role" >
+   
+	   <foreach collection="list" item="role" separator=";">
+	  	 insert into menu roles
+	  	 	(#{role.roleId},#{role.RoleName},sysdate,sysdate)
+        </foreach>   
+   
+   </insert>
+   
+ 	<select id = "getRolesByUserId" parameterType = "java.lang.Long" resultType="com.entry.Role">
+ 	
+	    select role_Id as roleId,
+	 		role_Name as roleName
+	 	from roles 
+
+	 	<if test="userId != 0">
+		 	where role_id in(
+		 		select role_id 
+		 			from user_roles
+		 		where user_id = #{userId}
+		 	)
+	 	</if>
+	 	
+ 	</select>
+ 	
+	</mapper>

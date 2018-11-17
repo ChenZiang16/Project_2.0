@@ -9,7 +9,7 @@ spring:
       prefix: /WEB-INF/jsp/
       suffix: .jsp
   datasource:
-    url: jdbc:mysql://192.168.2.103:3306/project
+    url: jdbc:mysql://192.168.2.101:3306/project
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: root!@#
@@ -32,13 +32,13 @@ spring:
       id: project-dubbo-consumer
       name: project-dubbo-consumer
     registry:
-      address: zookeeper://192.168.2.103:2181
+      address: zookeeper://192.168.2.101:2181
     protocol:
       port: 20800
       name: dubbo
     #redis配置
   redis:
-    host: 192.168.2.103
+    host: 192.168.2.101
     port: 6379
     # REDIS (RedisProperties)
     # Redis数据库索引（默认为0）
@@ -61,5 +61,17 @@ mybatis:
   mapper-locations: classpath:mapping/*.xml
   type-aliases-package: com.entry 
   
-
+rocketmq:
+  consumer:
+    #该应用是否启用消费者
+    isOnOff: on
+    groupName: springbootProject
+    #mq的nameserver地址
+    namesrvAddr: 127.0.0.1:9876
+    #该消费者订阅的主题和tags("*"号表示订阅该主题下所有的tags),格式：topic~tag1||tag2||tag3;topic2~*;
+    topics: DemoTopic~*;
+    consumeThreadMin: 20
+    consumeThreadMax: 64
+    #设置一次消费消息的条数，默认为1条
+    consumeMessageBatchMaxSize: 1
 

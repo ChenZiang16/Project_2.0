@@ -4,6 +4,8 @@ server:
   
   
 spring:
+  profiles:
+    active: uat
   mvc:
     view:
       prefix: /WEB-INF/jsp/
